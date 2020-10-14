@@ -11,29 +11,48 @@ class App extends Component {
     ynabAPI.transactions
       .getTransactionsByAccount(process.env.REACT_APP_BUDGET_ID, process.env.REACT_APP_ASSET_ID)
       .then((res) => {
-        const transactions = [];
+        const assets = {};
         res.data.transactions.forEach((transaction) => {
           let memo = transaction.memo;
           let asset_id = null;
-          let asset_memo = null;
+          let asset_event = null;
 
           if (memo.includes('{')) {
             memo = memo.match('^(.(?!{([^}]+)}))*')[0];
             asset_id = transaction.memo.match('{([^}]+)}')[1].split(',')[0];
-            asset_memo = transaction.memo.match('{([^}]+)}')[1].split(',')[1];
+            asset_event = transaction.memo.match('{([^}]+)}')[1].split(',')[1];
           }
 
-          transactions.push({
+          let transactionObject = {
             id: transaction.id,
             date: transaction.date,
             amount: transaction.amount / 100,
             memo: memo,
             asset_id: asset_id,
-            asset_event: asset_memo,
-          });
+            asset_event: asset_event,
+          };
+
+          if (!assets[asset_id]) {
+            assets[asset_id] = {
+              transactions: [],
+              date: transaction.date,
+              name: memo,
+              amount: transaction.amount / 100,
+            };
+          }
+
+          assets[asset_id].transactions.push(transactionObject);
+
+          if (asset_event === 'new') {
+            assets[asset_id].date = transaction.date;
+            assets[asset_id].name = memo;
+          }
+
+          const prevAmount = assets[asset_id].amount;
+          assets[asset_id].amount = prevAmount + transaction.amount / 100;
         });
 
-        this.setState({ transactions: transactions });
+        this.setState({ assets: assets });
       });
   }
 
