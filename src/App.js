@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import * as ynab from 'ynab';
 
-import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import Chip from '@material-ui/core/Chip';
 
 class App extends Component {
   state = {};
@@ -21,8 +25,8 @@ class App extends Component {
         const assets = {};
         res.data.transactions.forEach((transaction) => {
           let id = transaction.id;
-          let date = new Date(transaction.date);
-          let amount = transaction.amount / 1000;
+          let date = transaction.date;
+          let amount = transaction.amount;
           let memo = transaction.memo.includes('{')
             ? transaction.memo.match('^(.(?!{([^}]+)}))*')[0]
             : transaction.memo;
@@ -73,18 +77,37 @@ class App extends Component {
     let assets = [];
     if (this.state.assets) {
       Object.entries(this.state.assets).forEach(([key, value]) => {
+        let prevAmount = 0;
         if (key !== 'null')
           assets.push(
-            <Card className="card">
+            <Card key={key} className="card">
               <CardContent>
                 <Typography className="title" variant="h1">
                   {`#${key} - ${value.name}`}
                 </Typography>
                 <Typography className="subtitle" variant="subtitle1">
-                  {`Remaining Value: ${value.amount.toFixed(2)}€`}
+                  {`Remaining Value: ${(value.amount / 1000).toFixed(2)}€`}
                 </Typography>
-                {}
                 <Typography variant="body1">Transactions:</Typography>
+                <TableContainer component={Paper}>
+                  <Table>
+                    <TableBody>
+                      {value.transactions.map((transaction) => {
+                        prevAmount = prevAmount + transaction.amount;
+                        return (
+                          <TableRow key={transaction.id}>
+                            <TableCell>{transaction.date}</TableCell>
+                            <TableCell>
+                              <Chip label={transaction.asset_event} />
+                            </TableCell>
+                            <TableCell>{(transaction.amount / 1000).toFixed(2)}</TableCell>
+                            <TableCell>{(prevAmount / 1000).toFixed(2)}</TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
               </CardContent>
             </Card>
           );
