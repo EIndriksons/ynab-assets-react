@@ -13,20 +13,23 @@ class App extends Component {
       .then((res) => {
         const assets = {};
         res.data.transactions.forEach((transaction) => {
-          let memo = transaction.memo;
-          let asset_id = null;
-          let asset_event = null;
-
-          if (memo.includes('{')) {
-            memo = memo.match('^(.(?!{([^}]+)}))*')[0];
-            asset_id = transaction.memo.match('{([^}]+)}')[1].split(',')[0];
-            asset_event = transaction.memo.match('{([^}]+)}')[1].split(',')[1];
-          }
+          let id = transaction.id;
+          let date = new Date(transaction.date);
+          let amount = transaction.amount / 1000;
+          let memo = transaction.memo.includes('{')
+            ? transaction.memo.match('^(.(?!{([^}]+)}))*')[0]
+            : transaction.memo;
+          let asset_id = transaction.memo.includes('{')
+            ? transaction.memo.match('{([^}]+)}')[1].split(',')[0]
+            : null;
+          let asset_event = transaction.memo.includes('{')
+            ? transaction.memo.match('{([^}]+)}')[1].split(',')[1]
+            : null;
 
           let transactionObject = {
-            id: transaction.id,
-            date: transaction.date,
-            amount: transaction.amount / 100,
+            id: id,
+            date: date,
+            amount: amount,
             memo: memo,
             asset_id: asset_id,
             asset_event: asset_event,
@@ -34,22 +37,25 @@ class App extends Component {
 
           if (!assets[asset_id]) {
             assets[asset_id] = {
-              transactions: [],
-              date: transaction.date,
+              transactions: [transactionObject],
+              date: date,
               name: memo,
-              amount: transaction.amount / 100,
+              amount: amount,
+              active: true,
             };
+          } else {
+            assets[asset_id].transactions.push(transactionObject);
+            if (asset_event === 'new') {
+              assets[asset_id].date = date;
+              assets[asset_id].name = memo;
+            }
+            const prevAmount = assets[asset_id].amount;
+            assets[asset_id].amount = prevAmount + amount;
           }
 
-          assets[asset_id].transactions.push(transactionObject);
-
-          if (asset_event === 'new') {
-            assets[asset_id].date = transaction.date;
-            assets[asset_id].name = memo;
+          if (assets[asset_id].amount === 0) {
+            assets[asset_id].active = false;
           }
-
-          const prevAmount = assets[asset_id].amount;
-          assets[asset_id].amount = prevAmount + transaction.amount / 100;
         });
 
         this.setState({ assets: assets });
