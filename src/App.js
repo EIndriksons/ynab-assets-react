@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 import * as ynab from 'ynab';
 
+import { makeStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+
 class App extends Component {
   state = {};
 
@@ -63,11 +70,28 @@ class App extends Component {
   }
 
   render() {
-    return (
-      <React.Fragment>
-        <div>Hello World! This is {process.env.REACT_APP_API_KEY}</div>
-      </React.Fragment>
-    );
+    let assets = [];
+    if (this.state.assets) {
+      Object.entries(this.state.assets).forEach(([key, value]) => {
+        if (key !== 'null')
+          assets.push(
+            <Card className="card">
+              <CardContent>
+                <Typography className="title" variant="h1">
+                  {`#${key} - ${value.name}`}
+                </Typography>
+                <Typography className="subtitle" variant="subtitle1">
+                  {`Remaining Value: ${value.amount.toFixed(2)}€`}
+                </Typography>
+                {}
+                <Typography variant="body1">Transactions:</Typography>
+              </CardContent>
+            </Card>
+          );
+      });
+    }
+
+    return <React.Fragment>{assets}</React.Fragment>;
   }
 }
 
