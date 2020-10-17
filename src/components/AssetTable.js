@@ -12,6 +12,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import Chip from '@material-ui/core/Chip';
 
 const useRowStyles = makeStyles({
   root: {
@@ -58,13 +59,35 @@ function Row(props) {
                 </TableHead>
                 <TableBody>
                   {row.transactions.map((transaction) => {
+                    let chipColor;
+                    switch (transaction.asset_event) {
+                      case 'new':
+                        chipColor = '#4caf50';
+                        break;
+                      case 'add':
+                        chipColor = '#8bc34a';
+                        break;
+                      case 'depreciation':
+                        chipColor = '#ff5722';
+                        break;
+                      case 'sold':
+                        chipColor = '#2196f3';
+                        break;
+                      default:
+                    }
                     prevAmount = prevAmount + transaction.amount;
                     return (
                       <TableRow key={transaction.id}>
                         <TableCell component="th" scope="row">
                           {transaction.date}
                         </TableCell>
-                        <TableCell>{transaction.asset_event}</TableCell>
+                        <TableCell>
+                          <Chip
+                            size="small"
+                            label={transaction.asset_event}
+                            style={{ backgroundColor: chipColor }}
+                          />
+                        </TableCell>
                         <TableCell>{transaction.memo}</TableCell>
                         <TableCell align="right">
                           {(transaction.amount / 1000).toFixed(2)}
@@ -84,7 +107,6 @@ function Row(props) {
 }
 
 const assetTable = (props) => {
-  console.log(props.rows);
   return (
     <Box m={2}>
       <TableContainer component={Paper}>
