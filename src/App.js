@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import * as ynab from 'ynab';
 
+import AppBar from './components/AppBar';
+
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
@@ -114,7 +116,12 @@ class App extends Component {
       });
     }
 
-    return <React.Fragment>{assets}</React.Fragment>;
+    return (
+      <React.Fragment>
+        <AppBar />
+        <div>{assets}</div>
+      </React.Fragment>
+    );
   }
 }
 
