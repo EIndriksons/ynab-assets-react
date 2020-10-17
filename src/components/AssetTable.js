@@ -9,7 +9,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
@@ -87,22 +86,26 @@ function Row(props) {
 const assetTable = (props) => {
   console.log(props.rows);
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="collapsible table">
-        <TableHead>
-          <TableRow>
-            <TableCell />
-            <TableCell>No</TableCell>
-            <TableCell>Date</TableCell>
-            <TableCell>Memo</TableCell>
-            <TableCell align="right">Amount</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {props.rows ? props.rows.map(([key, row]) => <Row key={key} id={key} row={row} />) : null}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Box m={2}>
+      <TableContainer component={Paper}>
+        <Table aria-label="collapsible table">
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell>No</TableCell>
+              <TableCell>Date</TableCell>
+              <TableCell>Memo</TableCell>
+              <TableCell align="right">Amount</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {props.rows
+              ? props.rows.map(([key, row]) => <Row key={key} id={key} row={row} />)
+              : null}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   );
 };
 

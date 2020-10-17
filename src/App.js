@@ -4,17 +4,6 @@ import * as ynab from 'ynab';
 import AppBar from './components/AppBar';
 import AssetTable from './components/AssetTable';
 
-// import Card from '@material-ui/core/Card';
-// import CardContent from '@material-ui/core/CardContent';
-// import Typography from '@material-ui/core/Typography';
-// import Table from '@material-ui/core/Table';
-// import TableBody from '@material-ui/core/TableBody';
-// import TableCell from '@material-ui/core/TableCell';
-// import TableContainer from '@material-ui/core/TableContainer';
-// import TableRow from '@material-ui/core/TableRow';
-// import Paper from '@material-ui/core/Paper';
-// import Chip from '@material-ui/core/Chip';
-
 class App extends Component {
   state = { assets: null };
 
@@ -77,46 +66,6 @@ class App extends Component {
   }
 
   render() {
-    // let assets = [];
-    // if (this.state.assets) {
-    //   Object.entries(this.state.assets).forEach(([key, value]) => {
-    //     let prevAmount = 0;
-    //     if (key !== 'null')
-    //       assets.push(
-    //         <Card key={key} className="card">
-    //           <CardContent>
-    //             <Typography className="title" variant="h1">
-    //               {`#${key} - ${value.name}`}
-    //             </Typography>
-    //             <Typography className="subtitle" variant="subtitle1">
-    //               {`Remaining Value: ${(value.amount / 1000).toFixed(2)}€`}
-    //             </Typography>
-    //             <Typography variant="body1">Transactions:</Typography>
-    //             <TableContainer component={Paper}>
-    //               <Table>
-    //                 <TableBody>
-    //                   {value.transactions.map((transaction) => {
-    //                     prevAmount = prevAmount + transaction.amount;
-    //                     return (
-    //                       <TableRow key={transaction.id}>
-    //                         <TableCell>{transaction.date}</TableCell>
-    //                         <TableCell>
-    //                           <Chip label={transaction.asset_event} />
-    //                         </TableCell>
-    //                         <TableCell>{(transaction.amount / 1000).toFixed(2)}</TableCell>
-    //                         <TableCell>{(prevAmount / 1000).toFixed(2)}</TableCell>
-    //                       </TableRow>
-    //                     );
-    //                   })}
-    //                 </TableBody>
-    //               </Table>
-    //             </TableContainer>
-    //           </CardContent>
-    //         </Card>
-    //       );
-    //   });
-    // }
-
     return (
       <React.Fragment>
         <AppBar />
