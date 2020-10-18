@@ -1,6 +1,8 @@
 import React from 'react';
+import * as ynab from 'ynab';
 
 import AssetTableRow from './AssetTableRow';
+import InputForm from './InputForm';
 
 import Box from '@material-ui/core/Box';
 import Table from '@material-ui/core/Table';
@@ -11,7 +13,43 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
-const assetTable = (props) => {
+const AssetTable = (props) => {
+  const [openInput, setOpenInput] = React.useState({
+    open: false,
+    id: null,
+  });
+
+  const handleClickOpen = (id) => {
+    setOpenInput({
+      open: true,
+      id: id,
+    });
+  };
+
+  const handleClose = () => {
+    setOpenInput({
+      open: false,
+      id: null,
+    });
+  };
+
+  const createTransaction = (id, assetEvent, date, memo, amount) => {
+    const accessToken = process.env.REACT_APP_API_KEY;
+    const ynabAPI = new ynab.API(accessToken);
+    const data = {
+      account_id: process.env.REACT_APP_ASSET_ID,
+      date: '2020-10-19',
+      amount: amount * 1000,
+      memo: `${memo} {${id},${assetEvent}}`,
+    };
+
+    ynabAPI.transactions.createTransaction(process.env.REACT_APP_BUDGET_ID, data);
+    setOpenInput({
+      open: false,
+      id: null,
+    });
+  };
+
   return (
     <Box m={2}>
       <TableContainer component={Paper}>
@@ -28,13 +66,21 @@ const assetTable = (props) => {
           </TableHead>
           <TableBody>
             {props.rows
-              ? props.rows.map(([key, row]) => <AssetTableRow key={key} id={key} row={row} />)
+              ? props.rows.map(([key, row]) => (
+                  <AssetTableRow key={key} id={key} row={row} inputOpen={handleClickOpen} />
+                ))
               : null}
           </TableBody>
         </Table>
       </TableContainer>
+      <InputForm
+        ifOpen={openInput}
+        closeHandler={handleClose}
+        assetId={openInput.id}
+        createTransaction={createTransaction}
+      />
     </Box>
   );
 };
 
-export default assetTable;
+export default AssetTable;

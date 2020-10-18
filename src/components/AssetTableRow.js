@@ -44,7 +44,13 @@ const AssetTableRow = (props) => {
         <TableCell>{row.name}</TableCell>
         <TableCell align="right">{(row.amount / 1000).toFixed(2)}</TableCell>
         <TableCell align="right">
-          <Fab color="default" aria-label="add" size="small" align="right">
+          <Fab
+            color="default"
+            aria-label="add"
+            size="small"
+            align="right"
+            onClick={() => props.inputOpen(props.id)}
+          >
             <AddIcon />
           </Fab>
         </TableCell>
