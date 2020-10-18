@@ -12,6 +12,8 @@ import IconButton from '@material-ui/core/IconButton';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import Chip from '@material-ui/core/Chip';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
 
 const useRowStyles = makeStyles({
   root: {
@@ -41,6 +43,11 @@ const AssetTableRow = (props) => {
         <TableCell>{row.date}</TableCell>
         <TableCell>{row.name}</TableCell>
         <TableCell align="right">{(row.amount / 1000).toFixed(2)}</TableCell>
+        <TableCell align="right">
+          <Fab color="default" aria-label="add" size="small" align="right">
+            <AddIcon />
+          </Fab>
+        </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>

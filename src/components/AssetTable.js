@@ -23,6 +23,7 @@ const assetTable = (props) => {
               <TableCell>Date</TableCell>
               <TableCell>Memo</TableCell>
               <TableCell align="right">Amount</TableCell>
+              <TableCell align="right"></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
