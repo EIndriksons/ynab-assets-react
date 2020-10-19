@@ -32,7 +32,7 @@ const InputForm = (props) => {
               <KeyboardDatePicker
                 disableToolbar
                 variant="inline"
-                format="MM/dd/yyyy"
+                format="yyyy-MM-dd"
                 margin="normal"
                 id="date-picker-inline"
                 label="Date picker inline"
@@ -83,9 +83,7 @@ const InputForm = (props) => {
           </Button>
           <Button
             color="primary"
-            onClick={() =>
-              props.createTransaction(props.assetId, assetEvent, '2019-10-19', memo, amount)
-            }
+            onClick={() => props.createTransaction(props.assetId, assetEvent, date, memo, amount)}
           >
             Add
           </Button>

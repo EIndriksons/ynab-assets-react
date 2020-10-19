@@ -39,7 +39,7 @@ const AssetTable = (props) => {
     const data = {
       transaction: {
         account_id: process.env.REACT_APP_ASSET_ID,
-        date: '2020-10-19',
+        date: date,
         amount: amount * 1000,
         payee_id: null,
         payee_name: null,
