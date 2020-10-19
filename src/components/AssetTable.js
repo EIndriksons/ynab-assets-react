@@ -34,13 +34,25 @@ const AssetTable = (props) => {
   };
 
   const createTransaction = (id, assetEvent, date, memo, amount) => {
+    console.log('WOW!');
+
     const accessToken = process.env.REACT_APP_API_KEY;
     const ynabAPI = new ynab.API(accessToken);
     const data = {
-      account_id: process.env.REACT_APP_ASSET_ID,
-      date: '2020-10-19',
-      amount: amount * 1000,
-      memo: `${memo} {${id},${assetEvent}}`,
+      transaction: {
+        account_id: process.env.REACT_APP_ASSET_ID,
+        date: '2020-10-19',
+        amount: amount * 1000,
+        payee_id: null,
+        payee_name: null,
+        category_id: null,
+        memo: `${memo} {${id},${assetEvent}}`,
+        cleared: 'cleared',
+        approved: true,
+        flag_color: null,
+        import_id: null,
+        subtransactions: null,
+      },
     };
 
     ynabAPI.transactions.createTransaction(process.env.REACT_APP_BUDGET_ID, data);
