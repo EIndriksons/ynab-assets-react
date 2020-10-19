@@ -4,6 +4,14 @@ import * as ynab from 'ynab';
 import AppBar from './components/AppBar';
 import AssetTable from './components/AssetTable';
 
+const parseMemo = (memo) => {
+  return {
+    memo: memo.includes('{') ? memo.match('^(.(?!{([^}]+)}))*')[0] : memo,
+    asset_id: memo.includes('{') ? memo.match('{([^}]+)}')[1].split(',')[0] : null,
+    asset_event: memo.includes('{') ? memo.match('{([^}]+)}')[1].split(',')[1] : null,
+  };
+};
+
 class App extends Component {
   state = { assets: null };
 
@@ -19,15 +27,7 @@ class App extends Component {
           let id = transaction.id;
           let date = transaction.date;
           let amount = transaction.amount;
-          let memo = transaction.memo.includes('{')
-            ? transaction.memo.match('^(.(?!{([^}]+)}))*')[0]
-            : transaction.memo;
-          let asset_id = transaction.memo.includes('{')
-            ? transaction.memo.match('{([^}]+)}')[1].split(',')[0]
-            : null;
-          let asset_event = transaction.memo.includes('{')
-            ? transaction.memo.match('{([^}]+)}')[1].split(',')[1]
-            : null;
+          let { memo, asset_id, asset_event } = parseMemo(transaction.memo);
 
           let transactionObject = {
             id: id,
@@ -65,11 +65,28 @@ class App extends Component {
       });
   }
 
+  updateTransactions = (transaction, assetId, assetEvent) => {
+    let currAssets = this.state.assets;
+    currAssets[assetId].transactions.push({
+      id: transaction.data.transaction.id,
+      date: transaction.data.transaction.date,
+      amount: transaction.data.transaction.amount,
+      memo: parseMemo(transaction.data.transaction.memo).memo,
+      asset_id: assetId,
+      asset_event: assetEvent,
+    });
+
+    this.setState({ assets: currAssets });
+  };
+
   render() {
     return (
       <React.Fragment>
         <AppBar />
-        <AssetTable rows={this.state.assets ? Object.entries(this.state.assets) : null} />
+        <AssetTable
+          rows={this.state.assets ? Object.entries(this.state.assets) : null}
+          updateHandler={this.updateTransactions}
+        />
       </React.Fragment>
     );
   }

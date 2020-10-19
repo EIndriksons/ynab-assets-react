@@ -33,9 +33,7 @@ const AssetTable = (props) => {
     });
   };
 
-  const createTransaction = (id, assetEvent, date, memo, amount) => {
-    console.log('WOW!');
-
+  const createTransaction = (assetId, assetEvent, date, memo, amount) => {
     const accessToken = process.env.REACT_APP_API_KEY;
     const ynabAPI = new ynab.API(accessToken);
     const data = {
@@ -46,7 +44,7 @@ const AssetTable = (props) => {
         payee_id: null,
         payee_name: null,
         category_id: null,
-        memo: `${memo} {${id},${assetEvent}}`,
+        memo: `${memo} {${assetId},${assetEvent}}`,
         cleared: 'cleared',
         approved: true,
         flag_color: null,
@@ -55,7 +53,14 @@ const AssetTable = (props) => {
       },
     };
 
-    ynabAPI.transactions.createTransaction(process.env.REACT_APP_BUDGET_ID, data);
+    ynabAPI.transactions
+      .createTransaction(process.env.REACT_APP_BUDGET_ID, data)
+      .then((res) => {
+        props.updateHandler(res, assetId, assetEvent);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     setOpenInput({
       open: false,
       id: null,
